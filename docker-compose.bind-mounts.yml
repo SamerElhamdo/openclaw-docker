@@ -23,12 +23,8 @@ services:
       - NODE_ENV=production
       - OPENCLAW_SKIP_SERVICE_CHECK=true
       - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN:-}
-    command:
-      [
-        "sh",
-        "-c",
-        "mkdir -p /home/node/.openclaw/canvas /home/node/.openclaw/cron && exec node /app/dist/index.js gateway --bind lan --port 18789 --allow-unconfigured"
-      ]
+    entrypoint: ["sh", "-c"]
+    command: ["mkdir -p /home/node/.openclaw/canvas /home/node/.openclaw/cron && exec node /app/dist/index.js gateway --bind lan --port 18789 --allow-unconfigured"]
   
   socat-proxy:
     image: alpine/socat
