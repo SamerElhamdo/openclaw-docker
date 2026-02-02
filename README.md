@@ -112,6 +112,26 @@ During onboarding, you'll configure:
 
 Config is stored in `~/.openclaw/` and persists across container restarts.
 
+### Environment Variables
+
+Create a `.env` file in the same directory as `docker-compose.yml` to configure gateway authentication:
+
+```bash
+# Copy the example file
+cp env.example .env
+
+# Edit .env and set your gateway token
+# Generate a secure token: openssl rand -hex 32
+OPENCLAW_GATEWAY_TOKEN=your-secure-token-here
+```
+
+**Required if gateway auth is set to token:**
+- `OPENCLAW_GATEWAY_TOKEN` - Authentication token for the gateway API
+
+**Optional:**
+- `OPENCLAW_SKIP_SERVICE_CHECK` - Skip service check on startup (default: false)
+- `NODE_ENV` - Node environment (default: production)
+
 ## Available Tags
 
 | Tag | Description |
