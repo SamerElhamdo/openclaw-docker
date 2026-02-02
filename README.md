@@ -131,6 +131,25 @@ OPENCLAW_GATEWAY_TOKEN=your-secure-token-here
 **Optional:**
 - `OPENCLAW_SKIP_SERVICE_CHECK` - Skip service check on startup (default: false)
 - `NODE_ENV` - Node environment (default: production)
+- `OPENCLAW_GATEWAY_BIND` - Gateway bind mode: loopback, lan, tailnet, auto, custom (default: lan)
+- `OPENCLAW_GATEWAY_PORT` - Gateway port (default: 18789)
+
+### Dokploy Configuration
+
+For Dokploy deployments, use the example configuration:
+
+```bash
+# Copy the Dokploy example
+cp dokploy.example.toml dokploy.toml
+# Edit and customize for your Dokploy project
+```
+
+The `dokploy.example.toml` includes:
+- Automatic token generation
+- Domain configuration
+- Environment variables setup
+
+**Note:** The docker-compose.yml uses port-only format (`"18789"` instead of `"18789:18789"`) which is compatible with Dokploy's port management.
 
 ### Permission Issues
 

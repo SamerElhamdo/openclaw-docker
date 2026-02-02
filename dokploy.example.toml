@@ -1,0 +1,21 @@
+# Dokploy Configuration Example for OpenClaw
+# Copy this to your Dokploy project configuration
+
+[variables]
+gateway_token = "${password:32}"
+
+[config]
+[[config.domains]]
+serviceName = "openclaw-gateway"
+port = 18789
+host = "${domain}"
+
+[config.env]
+OPENCLAW_GATEWAY_TOKEN = "${gateway_token}"
+OPENCLAW_GATEWAY_PORT = 18789
+OPENCLAW_SKIP_SERVICE_CHECK = "true"
+
+# Optional: Additional environment variables
+# NODE_ENV = "production"
+# OPENCLAW_GATEWAY_BIND = "lan"
+
