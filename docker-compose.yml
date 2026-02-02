@@ -14,7 +14,7 @@ services:
     environment:
       - NODE_ENV=production
       - OPENCLAW_SKIP_SERVICE_CHECK=true
-    command: ["gateway"]
+    command: ["gateway", "--allow-unconfigured"]
   
   socat-proxy:
     image: alpine/socat
