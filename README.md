@@ -132,6 +132,26 @@ OPENCLAW_GATEWAY_TOKEN=your-secure-token-here
 - `OPENCLAW_SKIP_SERVICE_CHECK` - Skip service check on startup (default: false)
 - `NODE_ENV` - Node environment (default: production)
 
+### Permission Issues
+
+**Note:** Named volumes (default) automatically handle permissions - no manual fixes needed!
+
+If you're using bind mounts and encounter permission errors like `EACCES: permission denied, mkdir '/home/node/.openclaw/canvas'`:
+
+```bash
+# Option 1: Use the fix script
+./fix-permissions.sh
+
+# Option 2: Manual fix (adjust UID/GID if needed)
+sudo chown -R 1000:1000 ~/.openclaw
+sudo chmod -R 755 ~/.openclaw
+
+# Option 3: Switch to named volumes (recommended)
+# Just use the default docker-compose.yml - no permission issues!
+```
+
+The container runs as user `node` (UID 1000). Named volumes eliminate permission issues entirely.
+
 ## Available Tags
 
 | Tag | Description |
@@ -144,10 +164,53 @@ OPENCLAW_GATEWAY_TOKEN=your-secure-token-here
 
 ## Volumes
 
-| Path | Purpose |
-|------|---------|
-| `/home/node/.openclaw` | Config and session data |
-| `/home/node/.openclaw/workspace` | Agent workspace |
+The docker-compose.yml uses **named volumes** by default, which automatically handle permissions and are ideal for Docker deployments like Dokploy:
+
+| Volume Name | Container Path | Purpose |
+|-------------|----------------|---------|
+| `openclaw-config` | `/home/node/.openclaw` | Config and session data |
+| `openclaw-workspace` | `/home/node/.openclaw/workspace` | Agent workspace |
+
+### Using Bind Mounts (Alternative)
+
+If you prefer bind mounts (for easier host access), use the alternative compose file:
+
+```bash
+# Use the bind mounts version
+docker compose -f docker-compose.bind-mounts.yml up -d
+```
+
+Or manually replace the volumes section in `docker-compose.yml`:
+
+```yaml
+volumes:
+  - ~/.openclaw:/home/node/.openclaw
+  - ~/.openclaw/workspace:/home/node/.openclaw/workspace
+```
+
+**Note:** With bind mounts, ensure proper permissions:
+```bash
+mkdir -p ~/.openclaw/{workspace,canvas,cron}
+chmod -R 755 ~/.openclaw
+```
+
+### Migrating from Bind Mounts to Named Volumes
+
+If you have existing data in `~/.openclaw` and want to migrate to named volumes:
+
+```bash
+# Stop the gateway
+docker compose down
+
+# Copy data to named volume
+docker run --rm \
+  -v ~/.openclaw:/source:ro \
+  -v openclaw-config:/dest \
+  alpine sh -c "cp -a /source/. /dest/"
+
+# Restart with named volumes
+docker compose up -d
+```
 
 ## Ports
 

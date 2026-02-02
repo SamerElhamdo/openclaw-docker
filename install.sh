@@ -179,8 +179,14 @@ log_success "Downloaded docker-compose.yml"
 log_step "Creating data directories..."
 mkdir -p ~/.openclaw
 mkdir -p ~/.openclaw/workspace
+mkdir -p ~/.openclaw/canvas
+mkdir -p ~/.openclaw/cron
+# Set permissions (container runs as UID 1000)
+chmod -R 755 ~/.openclaw 2>/dev/null || true
 log_success "Created ~/.openclaw (config)"
 log_success "Created ~/.openclaw/workspace (workspace)"
+log_success "Created ~/.openclaw/canvas (canvas)"
+log_success "Created ~/.openclaw/cron (cron)"
 
 log_step "Pulling OpenClaw image..."
 docker pull "$IMAGE"
